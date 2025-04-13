@@ -23,7 +23,7 @@ HEADERS = {
 
 def check_vacancies():
     try:
-        url = "https://agropraktika.eu/vacancies"
+        url = "https://agropraktika.eu/vacancies?expired=1"
         response = requests.get(url, headers=HEADERS, cookies=COOKIES, timeout=10)
 
         if response.status_code != 200:
@@ -46,6 +46,7 @@ def check_vacancies():
                     title = vacancy.find("h4")
                     if title:
                         print(f"  {i}. {title.text.strip()}")
+                        print(vacancy)
                 return True
             else:
                 print("❌ No vacancies found in <ul> list.")
