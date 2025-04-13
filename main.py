@@ -23,7 +23,7 @@ HEADERS = {
 
 def check_vacancies():
     try:
-        url = "https://agropraktika.eu/vacancies?expired=1"
+        url = "https://agropraktika.eu/vacancies"
         response = requests.get(url, headers=HEADERS, cookies=COOKIES, timeout=10)
 
         if response.status_code != 200:
