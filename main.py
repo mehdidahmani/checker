@@ -15,7 +15,7 @@ COOKIES = {
 
 def check_vacancies():
     try:
-        url = "https://agropraktika.eu/vacancies?expired=1"
+        url = "https://agropraktika.eu/vacancies"
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
         }
@@ -27,6 +27,7 @@ def check_vacancies():
 
         soup = BeautifulSoup(response.text, "html.parser")
         vacancies_list = soup.find("ul", class_="vacancies-list")
+        print(vacancies_list)
 
         if vacancies_list and vacancies_list.find_all("li"):
             print("✅ Vacancies found!")
