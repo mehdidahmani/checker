@@ -19,11 +19,7 @@ def check_vacancies():
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
         }
-<<<<<<< HEAD
-        response = requests.get(url, headers=headers, cookies=COOKIES)
-=======
-        response = requests.get(url, headers=headers, timeout=10)
->>>>>>> 35f0b98ecd4dec87e826eb38805b4cb71d84124e
+        response = requests.get(url, headers=headers)
 
         if response.status_code != 200:
             print(f"❌ Failed to fetch page. Status code: {response.status_code}")
@@ -88,8 +84,4 @@ while True:
     except Exception as e:
         print("🚨 Unexpected error in main loop:")
         traceback.print_exc()
-<<<<<<< HEAD
-        time.sleep(5)
-=======
-        time.sleep(10)  # delay before next try to avoid hammering if something is broken
->>>>>>> 35f0b98ecd4dec87e826eb38805b4cb71d84124e
+        time.sleep(5)  # delay before next try to avoid hammering if something is broken
