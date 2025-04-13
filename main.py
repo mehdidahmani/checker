@@ -14,7 +14,7 @@ def check_vacancies():
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
         }
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=10)
 
         if response.status_code != 200:
             print(f"❌ Failed to fetch page. Status code: {response.status_code}")
@@ -55,7 +55,7 @@ def send_email():
             """
         }
 
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(url, headers=headers, json=data, timeout=10)
 
         if response.status_code == 200:
             print("📩 Email sent successfully.")
@@ -79,4 +79,4 @@ while True:
     except Exception as e:
         print("🚨 Unexpected error in main loop:")
         traceback.print_exc()
-        time.sleep(5)  # delay before next try to avoid hammering if something is broken
+        time.sleep(10)  # delay before next try to avoid hammering if something is broken
