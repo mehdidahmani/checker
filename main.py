@@ -8,13 +8,18 @@ RESEND_API_KEY = "re_79eFqCZv_fUWSeebAwqFfCGJW6ozYmp8S"
 TO_EMAIL = "mehdidahmani2003@gmail.com"
 FROM_EMAIL = "Agropraktika <onboarding@resend.dev>"
 
+# COOKIES TO INCLUDE IN THE REQUEST
+COOKIES = {
+    "XSRF-TOKEN": "eyJpdiI6IjV3TDYvOXMwUWhUR0NoNUxJZ1JBd2c9PSIsInZhbHVlIjoidXFHazd1cEhnckZYbEFic0xUcDFGL1YyYUtuREl4QjUxZUxmbmZJN0dBYlYwNDdRMnFTeVJoVjJDSVFFMThEOWZFdDY3a3hjM3hadTlXU29BT0IzUXFTNUJ1ZlF0Y1hTMDVWRVVkZWYrVk0xdW1Mb1BmLzFIYXNNc3dRTUJpSm8iLCJtYWMiOiJjZWFmZjFmM2M4YTdlYzMxMDNmZDIwY2I0NjI2MzRlMzQwM2FkOTA3NmZmOTEwMzQ4YTMxM2NjZDVkY2RlOGMwIiwidGFnIjoiIn0%3D"
+}
+
 def check_vacancies():
     try:
-        url = "https://agropraktika.eu/vacancies"
+        url = "https://agropraktika.eu/vacancies?"
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
         }
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, cookies=COOKIES)
 
         if response.status_code != 200:
             print(f"❌ Failed to fetch page. Status code: {response.status_code}")
@@ -79,4 +84,4 @@ while True:
     except Exception as e:
         print("🚨 Unexpected error in main loop:")
         traceback.print_exc()
-        time.sleep(5)  # delay before next try to avoid hammering if something is broken
+        time.sleep(5)
