@@ -10,35 +10,53 @@ FROM_EMAIL = "Agropraktika <onboarding@resend.dev>"
 
 # COOKIES TO INCLUDE IN THE REQUEST
 COOKIES = {
-    "XSRF-TOKEN": "eyJpdiI6IjV3TDYvOXMwUWhUR0NoNUxJZ1JBd2c9PSIsInZhbHVlIjoidXFHazd1cEhnckZYbEFic0xUcDFGL1YyYUtuREl4QjUxZUxmbmZJN0dBYlYwNDdRMnFTeVJoVjJDSVFFMThEOWZFdDY3a3hjM3hadTlXU29BT0IzUXFTNUJ1ZlF0Y1hTMDVWRVVkZWYrVk0xdW1Mb1BmLzFIYXNNc3dRTUJpSm8iLCJtYWMiOiJjZWFmZjFmM2M4YTdlYzMxMDNmZDIwY2I0NjI2MzRlMzQwM2FkOTA3NmZmOTEwMzQ4YTMxM2NjZDVkY2RlOGMwIiwidGFnIjoiIn0%3D"
+    "XSRF-TOKEN": "eyJpdiI6IjV3TDYvOXMwUWhUR0NoNUxJZ1JBd2c9PSIsInZhbHVlIjoid..."
 }
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://www.google.com/"
+}
+
 
 def check_vacancies():
     try:
         url = "https://agropraktika.eu/vacancies"
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
-        }
-        response = requests.get(url, headers=headers, cookies=COOKIES, timeout=10)
+        response = requests.get(url, headers=HEADERS, cookies=COOKIES, timeout=10)
 
         if response.status_code != 200:
             print(f"❌ Failed to fetch page. Status code: {response.status_code}")
             return False
 
         soup = BeautifulSoup(response.text, "html.parser")
-        vacancies_list = soup.find("ul", class_="vacancies-list")
-        print(vacancies_list)
 
-        if vacancies_list and vacancies_list.find_all("li"):
-            print("✅ Vacancies found!")
-            return True
+        # Save a debug dump of the HTML in Railway (for troubleshooting)
+        with open("dump.html", "w", encoding="utf-8") as f:
+            f.write(response.text)
+
+        vacancies_list = soup.find("ul", class_="vacancies-list")
+
+        if vacancies_list:
+            vacancies = vacancies_list.find_all("li")
+            if vacancies:
+                print(f"✅ {len(vacancies)} vacancy(ies) found!")
+                for i, vacancy in enumerate(vacancies, 1):
+                    title = vacancy.find("h4")
+                    if title:
+                        print(f"  {i}. {title.text.strip()}")
+                return True
+            else:
+                print("❌ No vacancies found in <ul> list.")
         else:
-            print("❌ No vacancies available.")
-            return False
+            print("❌ 'vacancies-list' not found.")
+        return False
     except Exception as e:
         print("⚠️ Error while checking vacancies:")
         traceback.print_exc()
         return False
+
 
 def send_email():
     try:
@@ -72,6 +90,7 @@ def send_email():
         print("⚠️ Error while sending email:")
         traceback.print_exc()
 
+
 print("🌀 Vacancy watcher started. Checking every 5 seconds...\n")
 
 while True:
@@ -85,4 +104,4 @@ while True:
     except Exception as e:
         print("🚨 Unexpected error in main loop:")
         traceback.print_exc()
-        time.sleep(5)  # delay before next try to avoid hammering if something is broken
+        time.sleep(5)
