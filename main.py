@@ -19,7 +19,7 @@ def check_vacancies():
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"
         }
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, cookies=COOKIES, timeout=10)
 
         if response.status_code != 200:
             print(f"❌ Failed to fetch page. Status code: {response.status_code}")
